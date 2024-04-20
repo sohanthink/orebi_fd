@@ -1,43 +1,37 @@
 import React, { useState } from 'react'
 import { Card, Space, Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const OtpPage = () => {
 
-    let navigate = useNavigate()
     let [loading, setLoading] = useState(true)
-
+    let { email } = useParams();
+    let navigate = useNavigate()
 
     const onFinish = async (values) => {
         setLoading(false)
         // console.log('Success:', values);
         try {
-            let regdata = {
-                name: values.name,
-                email: values.email,
-                password: values.password,
+            let otpdata = {
+                otp: values.otp,
+                email: email
             }
 
-            let userData = await axios.post("http://localhost:8000/api/v1/auth/registration", regdata)
-            console.log(userData.data)
-            message.error(userData.data.message);
-            navigate("/dashboard")
+            // console.log(otpdata.otp, otpdata.email);
+
+            let otpData = await axios.post("http://localhost:8000/api/v1/auth/otpverify", otpdata)
+            console.log(otpData.data)
+            message.success(otpData.data);
+            navigate("/login")
 
         } catch (error) {
-            console.log(error.response.data.message);
-            message.error(error.response.data.message);
+            console.log(error);
+            message.error(error.response);
 
         }
-
-        // Reset form values to empty strings
-        values = {
-            name: "",
-            email: "",
-            password: ""
-        };
         setLoading(true)
-        console.log(loading);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -45,7 +39,7 @@ const Login = () => {
     };
     return (
         <Space direction="vertical" size={16}>
-            <Card title="Registration" style={{ width: 500 }}>
+            <Card title="Enter the OTP from your Email" style={{ width: 500 }}>
                 <Form
                     name="basic"
                     labelCol={{
@@ -56,6 +50,7 @@ const Login = () => {
                     }}
                     style={{
                         maxWidth: 600,
+                        display: 'flex'
                     }}
                     initialValues={{
                         remember: true,
@@ -66,40 +61,16 @@ const Login = () => {
                 >
 
                     <Form.Item
-                        label="Email"
-                        name="email"
+                        label="Otp"
+                        name="otp"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your Email!',
+                                message: 'Please input your OTP!',
                             },
                         ]}
                     >
                         <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="remember"
-                        valuePropName="checked"
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }}
-                    >
-                        <Checkbox className='reg_btn'>Remember me</Checkbox>
                     </Form.Item>
 
                     <Form.Item
@@ -110,11 +81,11 @@ const Login = () => {
                     >
                         {loading ? (
                             <Button className='reg_btn' type="primary" htmlType="submit">
-                                Login
+                                Enter
                             </Button>
                         ) : (
                             <Button className='reg_btn' type="primary" loading>
-                                Loading
+                                Enter
                             </Button>
                         )}
                     </Form.Item>
@@ -124,4 +95,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default OtpPage

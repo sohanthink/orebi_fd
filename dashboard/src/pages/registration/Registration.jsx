@@ -24,7 +24,7 @@ const Registration = () => {
             let userData = await axios.post("http://localhost:8000/api/v1/auth/registration", regdata)
             console.log(userData.data)
             message.error(userData.data.message);
-            navigate("/login")
+            navigate(`/otp/${values.email}`)
 
         } catch (error) {
             console.log(error.response.data.message);
