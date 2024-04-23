@@ -1,14 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Space, Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const OtpPage = () => {
-
-    let [loading, setLoading] = useState(true)
     let { email } = useParams();
+    let [data, setData] = useState("")
     let navigate = useNavigate()
+    let [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        let fetcheddata = async () => {
+            const response = await axios.get(`http://localhost:8000/api/v1/auth/otpverify/${email}`);
+            setData(response.data);
+        }
+        fetcheddata();
+        // console.log(data);
+    }, [email])
+
+    console.log(data);
+
+    if (data == "Invalid Link") {
+        return navigate("/")
+    }
+
+    if (data.varified == true && data.otp === "" || data.varified == "false") {
+        return navigate("/login"); // Navigate to "/login" if verified is true and otp is empty
+    }
+
+
 
     const onFinish = async (values) => {
         setLoading(false)
@@ -23,12 +44,18 @@ const OtpPage = () => {
 
             let otpData = await axios.post("http://localhost:8000/api/v1/auth/otpverify", otpdata)
             console.log(otpData.data)
-            message.success(otpData.data);
-            navigate("/login")
+            if (otpData.data == "Wrong OTP!!") {
+                setLoading(true)
+                return message.success(otpData.data);
+            } else {
+                message.success(otpData.data);
+                navigate("/login")
+            }
 
         } catch (error) {
             console.log(error);
             message.error(error.response);
+            // if (error.response == "Already Verified")
 
         }
         setLoading(true)

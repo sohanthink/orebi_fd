@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Space, Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 
 
@@ -132,6 +132,8 @@ const Registration = () => {
                                 Loading
                             </Button>
                         )}
+
+                        <div style={{ display: 'flex', paddingTop: 15 }}><Link to="/login">Already An User??</Link></div>
                     </Form.Item>
                 </Form>
             </Card>

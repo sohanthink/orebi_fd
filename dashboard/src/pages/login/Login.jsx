@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Space, Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
@@ -13,31 +13,30 @@ const Login = () => {
         setLoading(false)
         // console.log('Success:', values);
         try {
-            let regdata = {
-                name: values.name,
+            let logindata = {
                 email: values.email,
                 password: values.password,
             }
 
-            let userData = await axios.post("http://localhost:8000/api/v1/auth/registration", regdata)
+            let userData = await axios.post("http://localhost:8000/api/v1/auth/login", logindata)
             console.log(userData.data)
-            message.error(userData.data.message);
-            navigate("/dashboard")
+            message.success(userData.data);
+            // navigate("/dashboard")
 
         } catch (error) {
             console.log(error.response.data.message);
-            message.error(error.response.data.message);
+            console.log(error.response.data)
+            message.error(error.response.data);
 
         }
 
         // Reset form values to empty strings
         values = {
-            name: "",
             email: "",
             password: ""
         };
         setLoading(true)
-        console.log(loading);
+        // console.log(loading);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -45,7 +44,7 @@ const Login = () => {
     };
     return (
         <Space direction="vertical" size={16}>
-            <Card title="Registration" style={{ width: 500 }}>
+            <Card title="Login" style={{ width: 500 }}>
                 <Form
                     name="basic"
                     labelCol={{
@@ -117,6 +116,10 @@ const Login = () => {
                                 Loading
                             </Button>
                         )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 20 }}>
+                            <div style={{}}><Link to="/">Click To Reset Pssword?</Link></div>
+                            {/* <div style={{}}><Link to="/">Go To Registration?</Link></div> */}
+                        </div>
                     </Form.Item>
                 </Form>
             </Card>
