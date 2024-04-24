@@ -6,28 +6,47 @@ import { useNavigate } from 'react-router-dom';
 
 const OtpPage = () => {
     let { email } = useParams();
-    let [data, setData] = useState("")
+    let [data, setData] = useState(null)
     let navigate = useNavigate()
     let [loading, setLoading] = useState(true)
 
+    // useEffect(() => {
+    //     let fetcheddata = async () => {
+    //         const response = await axios.get(`http://localhost:8000/api/v1/auth/otpverify/${email}`);
+    //         setData(response.data);
+    //     }
+    //     fetcheddata();
+    //     console.log(data);
+    // }, [email])
+
+    // useEffect(() => {
+    //     if (data == "Invalid Link") {
+    //         return navigate("/")
+    //     }
+    //     if (data.varified == true && data.otp === "") {
+    //         return navigate("/login"); // Navigate to "/login" if verified is true and otp is empty
+    //     }
+    // }, [data]);
+
+
     useEffect(() => {
         let fetcheddata = async () => {
-            const response = await axios.get(`http://localhost:8000/api/v1/auth/otpverify/${email}`);
-            setData(response.data);
-        }
+            try {
+                const response = await axios.get(`http://localhost:8000/api/v1/auth/otpverify/${email}`);
+                setData(response.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
         fetcheddata();
-        // console.log(data);
-    }, [email])
+    }, [email]);
 
-    console.log(data);
-
-    if (data == "Invalid Link") {
-        return navigate("/")
+    if (data === "Invalid Link") {
+        navigate("/");
+    } else if (data && data.varified && data.otp === "") {
+        navigate("/login");
     }
-
-    if (data.varified == true && data.otp === "" || data.varified == "false") {
-        return navigate("/login"); // Navigate to "/login" if verified is true and otp is empty
-    }
+    // console.log(data);
 
 
 

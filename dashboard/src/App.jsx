@@ -9,6 +9,8 @@ import {
 import Registration from './pages/registration/Registration'
 import Login from './pages/login/Login';
 import OtpPage from './pages/otp/OtpPage';
+import ForgotPassword from './pages/forgot/ForgotPassword';
+import ChangePassword from './pages/forgot/ChangePass';
 
 function App() {
 
@@ -18,7 +20,10 @@ function App() {
         <Route path='/' element={<Registration />} ></Route>
         <Route path='/login' element={<Login />} ></Route>
         <Route path='/otp/:email' element={<OtpPage />} ></Route>
-      </Route>
+
+        <Route path='/forgotpassword' element={<ForgotPassword />} ></Route>
+        <Route path='/changepassword/:email' element={<ChangePassword />} ></Route >
+      </Route >
     ))
 
   return (

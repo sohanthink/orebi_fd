@@ -3,7 +3,8 @@ import { Card, Space, Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+
+const ForgotPassword = () => {
 
     let navigate = useNavigate()
     let [loading, setLoading] = useState(true)
@@ -13,15 +14,15 @@ const Login = () => {
         setLoading(false)
         // console.log('Success:', values);
         try {
-            let logindata = {
-                email: values.email,
-                password: values.password,
+            let forgotData = {
+                email: values.email
             }
 
-            let userData = await axios.post("http://localhost:8000/api/v1/auth/login", logindata)
+            let userData = await axios.post("http://localhost:8000/api/v1/auth/forgotpassword", forgotData)
             console.log(userData.data)
             message.success(userData.data);
-            // navigate("/dashboard")
+
+            // navigate(`/changepassword/${values.email}`)
 
         } catch (error) {
             console.log(error.response.data.message);
@@ -30,11 +31,7 @@ const Login = () => {
 
         }
 
-        // Reset form values to empty strings
-        values = {
-            email: "",
-            password: ""
-        };
+
         setLoading(true)
         // console.log(loading);
     };
@@ -42,9 +39,11 @@ const Login = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+
+
     return (
         <Space direction="vertical" size={16}>
-            <Card title="Login" style={{ width: 500 }}>
+            <Card title="Enter Your Email To Change the Password" style={{ width: 500 }}>
                 <Form
                     name="basic"
                     labelCol={{
@@ -78,30 +77,6 @@ const Login = () => {
                     </Form.Item>
 
                     <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="remember"
-                        valuePropName="checked"
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }}
-                    >
-                        <Checkbox className='reg_btn'>Remember me</Checkbox>
-                    </Form.Item>
-
-                    <Form.Item
                         wrapperCol={{
                             offset: 8,
                             span: 16,
@@ -109,15 +84,15 @@ const Login = () => {
                     >
                         {loading ? (
                             <Button className='reg_btn' type="primary" htmlType="submit">
-                                Login
+                                Submit
                             </Button>
                         ) : (
                             <Button className='reg_btn' type="primary" loading>
-                                Loading
+                                Submitting
                             </Button>
                         )}
                         <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 20 }}>
-                            <div style={{}}><Link to="/forgotpassword">Click To Reset Pssword?</Link></div>
+                            {/* <div style={{}}><Link to="/">Click To Reset Pssword?</Link></div> */}
                             {/* <div style={{}}><Link to="/">Go To Registration?</Link></div> */}
                         </div>
                     </Form.Item>
@@ -127,4 +102,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default ForgotPassword
